@@ -330,50 +330,85 @@
             </div>
         </div>
     </main>
-
     <script>
+        // Maak een nieuwe Vue.js instantie aan en koppel deze aan het element met id 'app'.
         new Vue({
+            // Element selector waar Vue aan gekoppeld wordt.
             el: '#app',
+            // Data-object waarin de staat van de app wordt bijgehouden.
             data: {
+                // Tijdelijke opslag voor de naam van een nieuwe passagier.
                 newPassengerName: '',
+                // Tijdelijke opslag voor het nummer van de passagier die verwijderd moet worden.
                 passengerNumber: null,
+                // Een array van passagiers, aangemaakt met 10 items.
                 passengers: Array.from({ length: 10 }, (_, i) => ({ id: i, name: `Passenger ${i + 1}`, removed: false }))
             },
+            // Methoden-object met functies die de app kan uitvoeren.
             methods: {
+                // Voegt een nieuwe passagier toe aan de lijst.
                 addPassenger() {
+                    // Push een nieuw passagier-object in de passengers array.
                     this.passengers.push({ id: Date.now(), name: this.newPassengerName, removed: false });
+                    // Reset de newPassengerName naar een lege string.
                     this.newPassengerName = '';
                 },
+                // Verwijdert een passagier op basis van het ingevoerde nummer.
                 removePassenger() {
+                    // Bepaal de index van de te verwijderen passagier.
                     const index = this.passengerNumber - 1;
+                    // Controleer of de index geldig is en binnen de array valt.
                     if (index >= 0 && index < this.passengers.length) {
+                        // Markeer de passagier als verwijderd voor de reactiviteit.
                         this.$set(this.passengers, index, { ...this.passengers[index], removed: true });
+                        // Stel een timeout in om de passagier na 2 seconden te verwijderen.
                         setTimeout(() => {
                             this.passengers.splice(index, 1);
                         }, 2000);
                     }
+                    // Reset de passengerNumber naar null.
                     this.passengerNumber = null;
                 },
+                // Verwijdert specifiek de vijfde passagier uit de lijst.
                 removeFifthPassenger() {
+                    // Controleer of er minstens 5 passagiers zijn.
                     if (this.passengers.length >= 5) {
+                        // Markeer de vijfde passagier als verwijderd voor de reactiviteit.
                         this.$set(this.passengers, 4, { ...this.passengers[4], removed: true });
+                        // Stel een timeout in om de vijfde passagier na 2 seconden te verwijderen.
                         setTimeout(() => {
                             this.passengers.splice(4, 1);
                         }, 2000);
                     }
                 },
+                // Schudt de volgorde van de passagiers door elkaar.
                 shufflePassengers() {
+                    // Sorteer de passengers array op een willekeurige manier.
                     this.passengers.sort(() => Math.random() - 0.5);
                 },
+                // Verwijdert alle passagiers uit de lijst.
                 removeAllPassengers() {
+                    // Ga door elke passagier heen en markeer ze als verwijderd.
                     this.passengers.forEach((passenger, index) => {
+                        // Stel een timeout in om de passagier als verwijderd te markeren.
                         setTimeout(() => {
                             this.$set(this.passengers, index, { ...passenger, removed: true });
                         }, index * 200);
                     });
+                    // Stel een timeout in om de hele passengers array leeg te maken.
                     setTimeout(() => {
                         this.passengers = [];
                     }, this.passengers.length * 200);
+                },
+                // Verwijdert passagiers één voor één uit de lijst.
+                removePassengersOneByOne() {
+                    // Zolang er passagiers in de lijst zijn, blijf verwijderen.
+                    while (this.passengers.length > 0) {
+                        // Verwijder de eerste passagier uit de array.
+                        this.passengers.shift();
+                        // Log het aantal overgebleven passagiers.
+                        console.log(`Overgebleven passagiers: ${this.passengers.length}`);
+                    }
                 }
             }
         });
